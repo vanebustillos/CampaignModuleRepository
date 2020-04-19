@@ -7,5 +7,6 @@ namespace CampaignModule.BusinessLogic
 {
     public class CampaignLogic
     {
+
     }
 }

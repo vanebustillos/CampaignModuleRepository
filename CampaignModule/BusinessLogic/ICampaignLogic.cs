@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CampaignModule.Controllers.DTOModels;
 
-namespace CampaignModule.BusinessLogic
+namespace CampaignModule.Business_Logic
 {
-    interface ICampaignLogic
+    public interface ICampaignLogic
     {
+        public List<CampaignDTO> Campaingclass();
     }
 }
