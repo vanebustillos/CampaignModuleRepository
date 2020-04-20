@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CampaignModule.BusinessLogic;
+using CampaignModule.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,7 +28,8 @@ namespace CampaignModule
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-           
+            services.AddTransient<ICampaignLogic, CampaignLogic>();
+            services.AddSingleton<ICampaignTableDB, CampaignTableDB>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
