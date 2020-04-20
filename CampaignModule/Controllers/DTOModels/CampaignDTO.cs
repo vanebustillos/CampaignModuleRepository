@@ -7,9 +7,10 @@ namespace CampaignModule.Controllers.DTOModels
 {
     public class CampaignDTO
     {
-        public string CampaignName { get; set; }
-        public string CampaignType { get; set; }
-        public string CampaignDescription { get; set; }
+        public int Id { get; set; } 
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Description { get; set; }
         public bool Active { get; set; }
     }
 }
