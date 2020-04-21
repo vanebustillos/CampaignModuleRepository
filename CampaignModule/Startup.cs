@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using CampaignModule.BusinessLogic;
+using CampaignModule.Database;
 
 namespace CampaignModule
 {
@@ -26,6 +28,21 @@ namespace CampaignModule
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<ICampaignLogic, CampaignLogic>();
+            services.AddTransient<ICampaignTableDB, CampaignTableDB>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc
+                (
+                    "v1",
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title = "Group Selector API - DEV/QA",
+                        Version = "v1"
+                    }
+                );
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +62,12 @@ namespace CampaignModule
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Group Selector");
             });
         }
     }
