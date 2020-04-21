@@ -5,10 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.3.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.3.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.3.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.3.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+  </ItemGroup>
 
 </Project>

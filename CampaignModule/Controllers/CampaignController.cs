@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CampaignModule.BusinessLogic; //To be added
 using CampaignModule.Database.Models;
+using CampaignModule.BusinessLogic;
 
 namespace CampaignModule.Controllers
 {

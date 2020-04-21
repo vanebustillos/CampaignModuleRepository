@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CampaignModule.Controllers.DTOModels;
 using CampaignModule.Database.Models;
 
 namespace CampaignModule.BusinessLogic
