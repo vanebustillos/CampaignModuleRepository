@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using CampaignModule.BusinessLogic;
+using CampaignModule.Database;
 
 namespace CampaignModule
 {
@@ -30,7 +32,6 @@ namespace CampaignModule
             services.AddControllers();
             services.AddTransient<ICampaignLogic, CampaignLogic>();
             services.AddSingleton<ICampaignTableDB, CampaignTableDB>();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc
@@ -67,6 +68,7 @@ namespace CampaignModule
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Campaign");
+
             });
         }
 
