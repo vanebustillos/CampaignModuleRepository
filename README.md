@@ -1,9 +1,11 @@
 ## Tasks
-- Task 0
+- Task 0:
 	Create DTO Models.
-- Task 1
+- Task 1:
 	Create Controllers.
-- Task 2
+- Task 2:
 	Implement Business Logic. 
-- Task 3
+- Task 3:
 	Create Database layer.
+- Task 4: 
+	Implement CRUD operations. 

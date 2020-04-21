@@ -6,7 +6,7 @@ using CampaignModule.Database.Models;
 
 namespace CampaignModule.Database
 {
-    interface ICampaignTableDB
+    public interface ICampaignTableDB
     {
         public List<Campaign> GetAll();
     }

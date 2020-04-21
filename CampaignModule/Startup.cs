@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CampaignModule.BusinessLogic;
+using CampaignModule.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,8 +31,7 @@ namespace CampaignModule
         {
             services.AddControllers();
             services.AddTransient<ICampaignLogic, CampaignLogic>();
-            services.AddTransient<ICampaignTableDB, CampaignTableDB>();
-
+            services.AddSingleton<ICampaignTableDB, CampaignTableDB>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc
@@ -38,10 +39,9 @@ namespace CampaignModule
                     "v1",
                     new Microsoft.OpenApi.Models.OpenApiInfo()
                     {
-                        Title = "Group Selector API - DEV/QA",
-                        Version = "v1"
-                    }
-                );
+                        Title = "Campaigns API - DEV/QA",
+                        Version ="v1"
+                    });
             });
         }
 
@@ -53,7 +53,7 @@ namespace CampaignModule
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -67,8 +67,10 @@ namespace CampaignModule
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Group Selector");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Campaign");
+
             });
         }
+
     }
 }
