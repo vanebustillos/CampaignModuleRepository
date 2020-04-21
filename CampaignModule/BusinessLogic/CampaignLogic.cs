@@ -40,8 +40,16 @@ namespace CampaignModule.BusinessLogic
 
         public void Post(Campaign campaign) //Creates a new Campaign
         {
-            Campaign c = allCampaign.LastOrDefault();
-            campaign.Id= c.Id ++;
+            if (allCampaign.Count == 0) //verifies if allCampaigns is empty
+            {
+                campaign.Id = 1; //if it is, its first member has id = 1
+            }
+            else
+            {
+                Campaign c = allCampaign.Last();
+                campaign.Id = c.Id++; //if not, it is the last id + 1
+            }
+            
 
             switch (campaign.Type) // assigns a tipe of campaign
             {
