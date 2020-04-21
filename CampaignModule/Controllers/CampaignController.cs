@@ -37,9 +37,9 @@ namespace CampaignModule.Controllers
 
         // PUT: api/Campaign/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string newName, string newType, string newDescription)
+        public void Put(int id, [FromBody] string newName, string newType, string newDescription, bool newActive)
         {
-           _campaignLogic.Put(id, newName, newType, newDescription); //To be added
+           _campaignLogic.Put(id, newName, newType, newDescription, newActive); //To be added
         }
 
         // DELETE: api/Campaign/5

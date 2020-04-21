@@ -30,6 +30,18 @@ namespace CampaignModule
             services.AddControllers();
             services.AddTransient<ICampaignLogic, CampaignLogic>();
             services.AddSingleton<ICampaignTableDB, CampaignTableDB>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc
+                (
+                    "v1",
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title = "Campaigns API - DEV/QA",
+                        Version ="v1"
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,7 +52,7 @@ namespace CampaignModule
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -50,6 +62,13 @@ namespace CampaignModule
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Campaign");
+            });
         }
+
     }
 }

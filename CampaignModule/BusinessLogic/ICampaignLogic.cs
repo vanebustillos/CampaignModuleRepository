@@ -11,7 +11,7 @@ namespace CampaignModule.BusinessLogic
     {
         public List<Campaign> Get();
         public void Post(Campaign campaign);
-        public void Put(int id, string newName, string newType, string newDescription);
+        public void Put(int id, string newName, string newType, string newDescription, bool newActive );
         public void Delete(int id);
     }
 }

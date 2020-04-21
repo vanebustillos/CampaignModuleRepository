@@ -21,25 +21,18 @@ namespace CampaignModule.BusinessLogic
 
         public List<Campaign> Get()
         {
-            
-            foreach (Campaign campaign in allCampaign)
-            {
-                Activate(campaign, "XMAS");
-            }
-
             return allCampaign;
         }
 
-        private void Activate(Campaign campaign, string pType)
+        private void Activate()
         {
-            if (campaign.Active == true)
+            foreach (Campaign c2 in allCampaign)
             {
-                campaign.Active = false;
-            }
-
-            if (campaign.Type == pType)
-            {
-                campaign.Active = true;
+                if (c2.Active)
+                {
+                    c2.Active = false;
+                }
+                break;
             }
         }
 
@@ -62,9 +55,13 @@ namespace CampaignModule.BusinessLogic
                 default:
                     break;
             }
+            if (campaign.Active)
+            {
+                Activate();
+            }
             allCampaign.Add(campaign);
         }
-        public void Put(int id, string newName, string newType, string newDescription)
+        public void Put(int id, string newName, string newType, string newDescription, bool newActive)
         {
             foreach(Campaign c in allCampaign)
             {
@@ -73,7 +70,10 @@ namespace CampaignModule.BusinessLogic
                     c.Name = newName;
                     c.Type = newType;
                     c.Description = newDescription;
-                    // Activate()??
+                    if (newActive)
+                    {
+                        Activate();
+                    }
                     break;
                 }
             }
