@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CampaignModule.BusinessLogic; //To be added
+using CampaignModule.BusinessLogic; 
 using CampaignModule.Database.Models;
 
 namespace CampaignModule.Controllers
@@ -25,28 +25,28 @@ namespace CampaignModule.Controllers
         [HttpGet]
         public IEnumerable<Database.Models.Campaign> GetAll()
         {
-            return _campaignLogic.Get(); //To be added
+            return _campaignLogic.Get(); // Read, Returns all elements in database
         }
 
         // POST: api/Campaign
         [HttpPost]
         public void Post([FromBody] Campaign value)
         {
-           _campaignLogic.Post(value); //To be added
+           _campaignLogic.Post(value); //Create, Makes a new Campaign
         }
 
         // PUT: api/Campaign/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string newName, string newType, string newDescription, bool newActive)
         {
-           _campaignLogic.Put(id, newName, newType, newDescription, newActive); //To be added
+           _campaignLogic.Put(id, newName, newType, newDescription, newActive); //Update, Changes all fields in a Campaign in DB, except for the id
         }
 
         // DELETE: api/Campaign/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-           _campaignLogic.Delete(id); //To be added
+           _campaignLogic.Delete(id); //Delete, Removes a campaign from DB
         }
     }
 }
