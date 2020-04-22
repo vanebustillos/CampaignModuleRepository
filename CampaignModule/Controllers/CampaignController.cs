@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CampaignModule.Database.Models;
 using CampaignModule.BusinessLogic;
@@ -32,21 +29,21 @@ namespace CampaignModule.Controllers
         [HttpPost]
         public void Post([FromBody] Campaign value)
         {
-            _campaignLogic.Post(value); //Create, Makes a new Campaign
+           _campaignLogic.Post(value); //Create, Makes a new Campaign
         }
 
         // PUT: api/Campaign/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string newName, string newType, string newDescription, bool newActive)
         {
-            _campaignLogic.Put(id, newName, newType, newDescription, newActive); //Update, Changes all fields in a Campaign in DB, except for the id
+           _campaignLogic.Put(id, newName, newType, newDescription, newActive); //Update, Changes all fields in a Campaign in DB, except for the id
         }
 
         // DELETE: api/Campaign/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            _campaignLogic.Delete(id); //Delete, Removes a campaign from DB
+           _campaignLogic.Delete(id); //Delete, Removes a campaign from DB
         }
     }
 }

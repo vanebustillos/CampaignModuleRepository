@@ -1,17 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CampaignModule.BusinessLogic;
-using CampaignModule.Database;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using CampaignModule.BusinessLogic;
 using CampaignModule.Database;
 
@@ -29,9 +21,10 @@ namespace CampaignModule
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddTransient<ICampaignLogic, CampaignLogic>();
-            services.AddSingleton<ICampaignTableDB, CampaignTableDB>();
+            services.AddControllers(); //Imports Controllers
+            services.AddTransient<ICampaignLogic, CampaignLogic>(); //Imports Campaign Logic
+            services.AddSingleton<ICampaignTableDB, CampaignTableDB>(); //Imports DATABASE
+            //Imports SWAGGER
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc
