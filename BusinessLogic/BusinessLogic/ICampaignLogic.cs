@@ -8,9 +8,9 @@ namespace CampaignModule.BusinessLogic
 {
     public interface ICampaignLogic
     {
-        public List<Campaign> Get();
-        public void Post(Campaign campaign);
-        public void Put(int id, string newName, string newType, string newDescription, bool newActive );
-        public void Delete(int id);
+        public List<Campaign> Get(); //Read all
+        public void Post(Campaign campaign); //Create
+        public void Put(int id, string newName, string newType, string newDescription, bool newActive); //Update
+        public void Delete(int id); //Delete
     }
 }
