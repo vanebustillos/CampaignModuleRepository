@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CampaignModule.Controllers.DTOModels;
 using CampaignModule.Database;
 using CampaignModule.Database.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CampaignModule.BusinessLogic
 {
@@ -38,7 +39,7 @@ namespace CampaignModule.BusinessLogic
             }
         }
 
-        public void Post(Campaign campaign) //Creates a new Campaign
+        public void Post([FromBody]Campaign campaign) //Creates a new Campaign
         {
             if (allCampaign.Count == 0) //verifies if allCampaigns is empty
             {
@@ -73,7 +74,7 @@ namespace CampaignModule.BusinessLogic
             _campaignDB.CUD(allCampaign); //Updates DataBase 
         }
 
-        public void Put(int id, string newName, string newType, string newDescription, bool newActive) //Update, all fields in one
+        public void Put([FromBody]int id, string newName, string newType, string newDescription, bool newActive) //Update, all fields in one
         {
             foreach(Campaign c in allCampaign)
             {
