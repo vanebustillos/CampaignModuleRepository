@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using CampaignModule.Database.Models;
 using CampaignModule.BusinessLogic;
+using CampaignModule.Controllers.DTOModels;
 
 namespace CampaignModule.Controllers
 {
@@ -20,30 +21,31 @@ namespace CampaignModule.Controllers
 
         // GET: api/Campaign
         [HttpGet]
-        public IEnumerable<Database.Models.Campaign> GetAll()
+        public IEnumerable<CampaignDTO> GetAll()
         {
             return _campaignLogic.Get(); // Read, Returns all elements in database
         }
 
         // POST: api/Campaign
         [HttpPost]
-        public void Post([FromBody] Campaign value)
+        public void Post([FromBody] CampaignDTO value)
         {
-           _campaignLogic.Post(value); //Create, Makes a new Campaign
+            _campaignLogic.Post(value); //Create, Makes a new Campaign
         }
 
         // PUT: api/Campaign/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string newName, string newType, string newDescription, bool newActive)
+        /*[HttpPut("{id}")]*/
+        [HttpPut]
+        public void Put([FromBody]CampaignDTO campaign)
         {
-           _campaignLogic.Put(id, newName, newType, newDescription, newActive); //Update, Changes all fields in a Campaign in DB, except for the id
+            _campaignLogic.Put(campaign); //Update, Changes all fields in a Campaign in DB, except for the id
         }
 
         // DELETE: api/Campaign/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-           _campaignLogic.Delete(id); //Delete, Removes a campaign from DB
+            _campaignLogic.Delete(id); //Delete, Removes a campaign from DB
         }
     }
 }

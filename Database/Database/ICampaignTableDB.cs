@@ -6,8 +6,9 @@ namespace CampaignModule.Database
 {
     public interface ICampaignTableDB
     {
-        public List<Campaign> GetAll(); //Read all in Database
-
-        public void CUD(List<Campaign> campaigns);
+        public List<Campaign> GetAll(); //Get, Read all in Database
+        public void Create(Campaign campaign); //Post
+        public void Update(Campaign campaign); //Put
+        public void Delete(Campaign campaign); //Delete
     }
 }

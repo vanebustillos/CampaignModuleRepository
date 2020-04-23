@@ -19,9 +19,30 @@ namespace CampaignModule.Database
             return DataBase;
         }
 
-        public void CUD(List<Campaign> campaigns) // C U D, updates the Database with any changes that may have happened, either Creation, Update or Delete of fields
+        public void Create(Campaign campaign) // Creates a New Campaign 
         {
-            DataBase = campaigns;
+            DataBase.Add(campaign);
+        }
+
+        public void Update(Campaign campaign) //Updates all fields in a Campaign except its id
+        {
+            foreach(Campaign camp in DataBase)
+            {
+                if (camp == campaign)
+                {
+                    
+                    camp.Name = campaign.Name;
+                    camp.Type = campaign.Type;
+                    camp.Description = campaign.Description;
+                    camp.Active = campaign.Active;
+                    break;
+                }
+            }
+        }
+
+        public void Delete(Campaign campaign) //Removes a Campaign
+        {
+            DataBase.Remove(campaign);
         }
     }
 }
