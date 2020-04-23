@@ -99,9 +99,11 @@ namespace CampaignModule.BusinessLogic
             foreach(Campaign c in allCampaign)
             {
                 if (c.Id == id)
+                {
                     allCampaign.Remove(c);
-                _campaignDB.CUD(allCampaign); //Updates DataBase 
-                break;
+                    _campaignDB.CUD(allCampaign); //Updates DataBase 
+                    break;
+                }
             }
         } 
 
