@@ -92,10 +92,11 @@ namespace CampaignModule.BusinessLogic
                 if (c.Id == id)
                 {
                     allCampaign.Remove(c);
+
                     _campaignDB.Delete(c); //Delete Campaign in DataBase 
                     break;
                 }
-                
+
             }
         }
 
