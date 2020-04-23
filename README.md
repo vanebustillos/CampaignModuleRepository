@@ -15,3 +15,7 @@
 	File Management
 - Task 7:
 	Functionality Testing and fixes
+
+## General Info
+- SWAGGER URL IN RUNTIME: http://localhost:5000/swagger/index.html
+- github Repository: https://github.com/vanebustillos/CampaignModuleRepository
