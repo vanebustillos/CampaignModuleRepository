@@ -20,9 +20,90 @@ namespace CampaignModule.BusinessLogic
             allCampaign = _campaignDB.GetAll();
         }
 
-        public List<Campaign> Get() //Read, returns a list of all its members
+
+        /**********Main Functions****************/
+
+        public List<CampaignDTO> Get() //Read, returns a list of all its members
         {
-            return allCampaign;
+            UpdateLocalDB();
+            List<CampaignDTO> Datos = new List<CampaignDTO>(); 
+            foreach (Campaign camp in allCampaign)
+            {
+                Datos.Add(ConvDBtoDTO(camp));
+            }
+            return Datos;
+
+        }
+
+        public void Post(CampaignDTO campaign) //Creates a new Campaign
+        {
+            UpdateLocalDB();
+            Campaign input = ConvDTOtoDB(campaign);
+            if (allCampaign.Count == 0) //verifies if allCampaigns is empty
+            {
+                input.Id = 1; //if it is, its first member has id = 1
+            }
+            else
+            {
+                Campaign c = allCampaign.Last();
+                input.Id = c.Id + 1; //if not, it is the last id + 1
+            }
+
+            SelectType(input);
+
+            if (input.Active) //removes active campaign if any
+            {
+                Activate();
+            }
+             
+            allCampaign.Add(input); //Creates Campaign in DataBase 
+
+        }
+
+        public void Put(CampaignDTO campaign) //Update, all fields in one
+        {
+            UpdateLocalDB();
+            Campaign input = ConvDTOtoDB(campaign);
+            foreach(Campaign c in allCampaign)
+            {
+                if (c.Id == input.Id)
+                {
+                    c.Name = input.Name;
+                    SelectType(input);
+                    c.Type = input.Type;
+                    c.Description = input.Description;
+                    if (input.Active) //removes active campaign if any
+                    {
+                        Activate();
+                    }
+                    c.Active = input.Active; //activates campaign
+                    
+                    _campaignDB.Update(input); //Updates Campaign in DataBase 
+                    break;  
+
+                } //if none found does nothing
+            }
+        }
+        public void Delete(int id) // Delete
+        {
+            UpdateLocalDB();
+            foreach (Campaign c in allCampaign)
+            {
+                if (c.Id == id)
+                {
+                    allCampaign.Remove(c);
+
+                    _campaignDB.Delete(c); //Delete Campaign in DataBase 
+                    break;
+                }
+
+            }
+        }
+
+        /**********Auxiliary Functions****************/
+        public void UpdateLocalDB() //Updates the local list of elements used for the operations
+        {
+            allCampaign = _campaignDB.GetAll();
         }
 
         private void Activate() //Deactivates any active campaign present, it considers only one active at the time
@@ -32,82 +113,36 @@ namespace CampaignModule.BusinessLogic
                 if (c2.Active)
                 {
                     c2.Active = false;
+                    _campaignDB.Update(c2);
+                    break;
                 }
-
-                
-                break;
             }
         }
 
-        public void Post([FromBody]Campaign campaign) //Creates a new Campaign
+        public void SelectType(Campaign input)
         {
-            if (allCampaign.Count == 0) //verifies if allCampaigns is empty
-            {
-                campaign.Id = 1; //if it is, its first member has id = 1
-            }
-            else
-            {
-                Campaign c = allCampaign.Last();
-                campaign.Id = c.Id++; //if not, it is the last id + 1
-            }
-            
 
-            switch (campaign.Type) // assigns a tipe of campaign
+
+            switch (input.Type) // assigns a tipe of campaign
             {
                 case "Navidad":
-                    campaign.Type = "XMAS";
+                    input.Type = "XMAS";
                     break;
                 case "Verano":
-                    campaign.Type = "SUMMER";
+                    input.Type = "SUMMER";
                     break;
                 case "Black Friday":
-                    campaign.Type = "BFRIDAY";
+                    input.Type = "BFRIDAY";
+                    break;
+                case "Primavera":
+                    input.Type = "SPRING";
                     break;
                 default:
                     break;
             }
-            if (campaign.Active) //removes active campaign if any
-            {
-                Activate();
-            }
-            allCampaign.Add(campaign);
-            _campaignDB.CUD(allCampaign); //Updates DataBase 
         }
 
-        public void Put([FromBody]int id, string newName, string newType, string newDescription, bool newActive) //Update, all fields in one
-        {
-            foreach(Campaign c in allCampaign)
-            {
-                if (c.Id == id)
-                {
-                    c.Name = newName;
-                    c.Type = newType;
-                    c.Description = newDescription;
-                    if (newActive) //removes active campaign if any
-                    {
-                        Activate();
-                    }
-                    c.Active = newActive; //activates campaign
-                    _campaignDB.CUD(allCampaign); //Updates DataBase 
-                    break;  
-
-                } //if none found does nothing
-            }
-        }
-        public void Delete(int id) // Delete
-        {
-            foreach(Campaign c in allCampaign)
-            {
-                if (c.Id == id)
-                {
-                    allCampaign.Remove(c);
-                    _campaignDB.CUD(allCampaign); //Updates DataBase 
-                    break;
-                }
-            }
-        } 
-
-        public Campaign  ConvDTOtoDB(CampaignDTO old) //Converts a DTOCampaign to a DB Campaign
+        public Campaign ConvDTOtoDB(CampaignDTO old) //Converts a DTOCampaign to a DB Campaign
         {
             Campaign valid = new Campaign();
 
@@ -130,5 +165,7 @@ namespace CampaignModule.BusinessLogic
             valid.Active = old.Active;
             return valid;
         }
+
+
     }
 }
