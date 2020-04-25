@@ -10,5 +10,6 @@ namespace CampaignModule.Database
         public void Create(Campaign campaign); //Post
         public void Update(Campaign campaign); //Put
         public void Delete(Campaign campaign); //Delete
+        public bool OneCampaignActive();//Verify if any campaign is actives
     }
 }

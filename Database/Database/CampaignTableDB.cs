@@ -44,5 +44,17 @@ namespace CampaignModule.Database
         {
             DataBase.Remove(campaign);
         }
+
+        public bool OneCampaignActive()
+        {
+            foreach(Campaign campaign in DataBase)
+            {
+                if (campaign.Active)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
