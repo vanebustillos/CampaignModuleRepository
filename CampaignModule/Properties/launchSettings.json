@@ -17,12 +17,21 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "CMD - CampaignModule": {
+    "Develop": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:4401"
+    },
+    "QA": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "QA"
       },
       "applicationUrl": "http://localhost:4401"
     }
