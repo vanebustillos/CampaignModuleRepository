@@ -20,7 +20,6 @@ namespace CampaignModule.BusinessLogic
             allCampaign = _campaignDB.GetAll();
         }
 
-
         /**********Main Functions****************/
 
         public List<CampaignDTO> Get() //Read, returns a list of all its members
@@ -35,7 +34,7 @@ namespace CampaignModule.BusinessLogic
 
         }
 
-        public void Post(CampaignDTO campaign) //Creates a new Campaign
+        public CampaignDTO Post(CampaignDTO campaign) //Creates a new Campaign
         {
             UpdateLocalDB();
             Campaign input = ConvDTOtoDB(campaign);
@@ -56,9 +55,8 @@ namespace CampaignModule.BusinessLogic
                     input.Active = false;//input campaign can´t be activate
                 }
             }
-            
-            allCampaign.Add(input); //Creates Campaign in DataBase 
-
+            allCampaign.Add(input); //Creates Campaign in DataBase
+            return campaign;
         }
 
         public void Put(CampaignDTO campaign, int id) //Update, all fields in one
