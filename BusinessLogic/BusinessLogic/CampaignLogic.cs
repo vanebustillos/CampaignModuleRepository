@@ -40,7 +40,7 @@ namespace CampaignModule.BusinessLogic
             Campaign input = ConvDTOtoDB(campaign);
             if (allCampaign.Count == 0) //verifies if allCampaigns is empty
             {
-                input.Id = 1; //if it is, its first member has id = 1
+                input.Id = "CAMPIGN-1"; //if it is, its first member has id = 1
             }
             else
             {
@@ -59,7 +59,7 @@ namespace CampaignModule.BusinessLogic
             return campaign;
         }
 
-        public void Put(CampaignDTO campaign, int id) //Update, all fields in one
+        public void Put(CampaignDTO campaign, string id) //Update, all fields in one
         {
             UpdateLocalDB();
             
@@ -91,7 +91,7 @@ namespace CampaignModule.BusinessLogic
                 } //if none found does nothing
             }
         }
-        public void Delete(int id) // Delete
+        public void Delete(string id) // Delete
         {
             UpdateLocalDB();
             foreach (Campaign c in allCampaign)
@@ -113,7 +113,7 @@ namespace CampaignModule.BusinessLogic
             allCampaign = _campaignDB.GetAll();
         }
 
-        public void Activate(int id) //Deactivates any active campaign present, it considers only one active at the time
+        public void Activate(string id) //Deactivates any active campaign present, it considers only one active at the time
         {
             UpdateLocalDB();
             foreach (Campaign c2 in allCampaign)
@@ -130,7 +130,7 @@ namespace CampaignModule.BusinessLogic
                 }
             }
         }
-        public void Deactivate(int id)
+        public void Deactivate(string id)
         {
             UpdateLocalDB();
             foreach (Campaign c2 in allCampaign)
@@ -171,7 +171,7 @@ namespace CampaignModule.BusinessLogic
         public Campaign ConvDTOtoDB(CampaignDTO old) //Converts a DTOCampaign to a DB Campaign
         {
             Campaign valid = new Campaign();
-            if (old.Id != 0)
+            if (old.Id != "CAMPIGN-0")
                 valid.Id = old.Id;
             valid.Name = old.Name;
             valid.Description = old.Description;

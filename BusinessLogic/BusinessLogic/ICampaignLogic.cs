@@ -9,9 +9,9 @@ namespace CampaignModule.BusinessLogic
     {
         public List<CampaignDTO> Get(); //Read all
         public CampaignDTO Post(CampaignDTO campaign); //Create
-        public void Put(CampaignDTO campaign, int id); //Update
-        public void Delete(int id); //Delete
-        public void Activate(int id); //Activate a campaign
-        public void Deactivate(int id);//Deactivate a campaign
+        public void Put(CampaignDTO campaign, string id); //Update
+        public void Delete(string id); //Delete
+        public void Activate(string id); //Activate a campaign
+        public void Deactivate(string id);//Deactivate a campaign
     }
 }

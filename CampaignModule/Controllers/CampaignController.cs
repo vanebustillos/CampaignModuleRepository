@@ -43,21 +43,21 @@ namespace CampaignModule.Controllers
         // PUT: api/Campaign/5
         [HttpPut]
         [Route("campaigns/{id}")]
-        public void Put([FromBody]CampaignDTO campaign, int id)
+        public void Put([FromBody]CampaignDTO campaign, string id)
         {
             _campaignLogic.Put(campaign, id); //Update, Changes all fields in a Campaign in DB, except for the id
         }
         
         [HttpPut]
         [Route("campaigns/{id}/activate")]
-        public void Activate(int id)
+        public void Activate(string id)
         {
             _campaignLogic.Activate(id); //Activate a campaign
         }
         
         [HttpPut]
         [Route("campaigns/{id}/deactivate")]
-        public void Deactivate(int id)
+        public void Deactivate(string id)
         {
             _campaignLogic.Deactivate(id); //Activate a campaign
         }
@@ -65,7 +65,7 @@ namespace CampaignModule.Controllers
         // DELETE: api/Campaign/5
         [HttpDelete]
         [Route("campaigns/{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
             _campaignLogic.Delete(id); //Delete, Removes a campaign from DB
         }

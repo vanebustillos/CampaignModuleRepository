@@ -8,10 +8,10 @@ namespace CampaignModule.Database
     {
         List<Campaign> DataBase = new List<Campaign>
         {
-                new Campaign() { Id = 1,Name = "Christmas Part I", Type = "XMAS", Description = "Before 24th December", Active = false},
-                new Campaign() { Id = 2,Name = "Christmas Part II", Type = "XMAS", Description = "After 25th December", Active = false},
-                new Campaign() { Id = 3,Name = "Summer discounts", Type = "SUMMER", Description = "All July", Active = false},
-                new Campaign() { Id = 4,Name = "Black Friday discounts", Type = "BFRIDAY", Description = "Buy all you can", Active = false}
+                new Campaign() { Id = "CAMPIGN-1",Name = "Christmas Part I", Type = "XMAS", Description = "Before 24th December", Active = false},
+                new Campaign() { Id = "CAMPIGN-2",Name = "Christmas Part II", Type = "XMAS", Description = "After 25th December", Active = false},
+                new Campaign() { Id = "CAMPIGN-3",Name = "Summer discounts", Type = "SUMMER", Description = "All July", Active = false},
+                new Campaign() { Id = "CAMPIGN-4",Name = "Black Friday discounts", Type = "BFRIDAY", Description = "Buy all you can", Active = false}
         };
 
         public List<Campaign> GetAll() //Read, returns all campaigns
