@@ -45,7 +45,9 @@ namespace CampaignModule.BusinessLogic
             else
             {
                 Campaign c = allCampaign.Last();
-                input.Id = c.Id + 1; //if not, it is the last id + 1
+                string[] fracment = c.Id.Split("-");
+                int lastId = Int32.Parse(fracment[1]) + 1;
+                input.Id = "CAMPIGN-" + lastId; //if not, it is the last id + 1
             }
             SelectType(input);
             if(input.Active) 
