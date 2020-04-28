@@ -48,18 +48,18 @@ namespace CampaignModule.Controllers
             _campaignLogic.Put(campaign, id); //Update, Changes all fields in a Campaign in DB, except for the id
         }
         
-        [HttpPut]
+        [HttpPost]
         [Route("campaigns/{id}/activate")]
         public void Activate(string id)
         {
             _campaignLogic.Activate(id); //Activate a campaign
         }
         
-        [HttpPut]
+        [HttpPost]
         [Route("campaigns/{id}/deactivate")]
         public void Deactivate(string id)
         {
-            _campaignLogic.Deactivate(id); //Activate a campaign
+            _campaignLogic.Deactivate(id); //Deactivate a campaign
         }
         
         // DELETE: api/Campaign/5

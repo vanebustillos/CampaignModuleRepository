@@ -13,6 +13,7 @@ namespace CampaignModule.BusinessLogic
     {
         private ICampaignTableDB _campaignDB; // DB of campaign
         public List<Campaign> allCampaign; //Data of DB
+        public List<string> ValidTypes = new List<string> {"Navidad","Verano","Black Friday","Primavera" };
 
         public CampaignLogic(ICampaignTableDB campaignDB)
         {
@@ -36,62 +37,73 @@ namespace CampaignModule.BusinessLogic
 
         public CampaignDTO Post(CampaignDTO campaign) //Creates a new Campaign
         {
-            UpdateLocalDB();
-            Campaign input = ConvDTOtoDB(campaign);
-            if (allCampaign.Count == 0) //verifies if allCampaigns is empty
+            if (VerifyFields(campaign))
             {
-                input.Id = "CAMPIGN-1"; //if it is, its first member has id = 1
-            }
-            else
-            {
-                Campaign c = allCampaign.Last();
-                string[] fracment = c.Id.Split("-");
-                int lastId = Int32.Parse(fracment[1]) + 1;
-                input.Id = "CAMPIGN-" + lastId; //if not, it is the last id + 1
-            }
-            SelectType(input);
-            if(input.Active) 
-            {
-                if (_campaignDB.OneCampaignActive()) //if a campaign is already active
+                UpdateLocalDB();
+                Campaign input = ConvDTOtoDB(campaign);
+
+                if (allCampaign.Count == 0) //verifies if allCampaigns is empty
                 {
-                    input.Active = false;//input campaign can´t be activate
+                    input.Id = "CAMPIGN-1"; //if it is, its first member has id = 1
                 }
+                else
+                {
+                    Campaign c = allCampaign.Last();
+                    string[] fracment = c.Id.Split("-");
+                    int lastId = Int32.Parse(fracment[1]) + 1;
+                    input.Id = "CAMPIGN-" + lastId; //if not, it is the last id + 1
+                }
+                SelectType(input);
+                if (input.Active)
+                {
+                    if (_campaignDB.OneCampaignActive()) //if a campaign is already active
+                    {
+                        input.Active = false;//input campaign can´t be activate
+                    }
+                }
+                allCampaign.Add(input); //Creates Campaign in DataBase
+                return campaign;
             }
-            allCampaign.Add(input); //Creates Campaign in DataBase
-            return campaign;
+            return null;
+            
         }
 
         public void Put(CampaignDTO campaign, string id) //Update, all fields in one
         {
-            UpdateLocalDB();
-            
-            foreach(Campaign c in allCampaign)
-            {
-                if (c.Id == id)
-                {
-                    Campaign input = ConvDTOtoDB(campaign);
-                    if (input.Name != null)
-                        c.Name = input.Name;
-                    if (input.Type != null)
-                    {
-                        SelectType(input);
-                        c.Type = input.Type;
-                    }
-                    if(input.Description!=null)
-                        c.Description = input.Description;
-                    if (input.Active) //removes active campaign if any
-                    {
-                        Activate(id);//activate campaign
-                    }
-                    else
-                    {
-                        Deactivate(id); //deactivate campaign
-                    }
-                    _campaignDB.Update(input); //Updates Campaign in DataBase 
-                    break;  
 
-                } //if none found does nothing
+            if (VerifyFields(campaign))
+            {
+                UpdateLocalDB();
+
+                foreach (Campaign c in allCampaign)
+                {
+                    if (c.Id == id)
+                    {
+                        Campaign input = ConvDTOtoDB(campaign);
+                        if (input.Name != null)
+                            c.Name = input.Name;
+                        if (input.Type != null)
+                        {
+                            SelectType(input);
+                            c.Type = input.Type;
+                        }
+                        if (input.Description != null)
+                            c.Description = input.Description;
+                        if (input.Active) //removes active campaign if any
+                        {
+                            Activate(id);//activate campaign
+                        }
+                        else
+                        {
+                            Deactivate(id); //deactivate campaign
+                        }
+                        _campaignDB.Update(input); //Updates Campaign in DataBase 
+                        break;
+
+                    } //if none found does nothing
+                }
             }
+            
         }
         public void Delete(string id) // Delete
         {
@@ -113,6 +125,38 @@ namespace CampaignModule.BusinessLogic
         public void UpdateLocalDB() //Updates the local list of elements used for the operations
         {
             allCampaign = _campaignDB.GetAll();
+        }
+
+        public bool VerifyFields(CampaignDTO campaign) //Reviews all the input fields of type string to verify its correctnes, returns false if an error is found
+        {
+            if (campaign.Name == null || campaign.Name == "") //Verify if name is null or empty
+            {
+                //Console.WriteLine("Ingrese un nombre");
+                return false;
+            }
+            if (campaign.Description == null || campaign.Description == "") //Verify if description is null or empty
+            {
+                //Console.WriteLine("Ingrese una descripcion");
+                return false;
+            }
+            if (campaign.Type == null || VerifyType(campaign.Type)) //Verify if type is null or invalid
+            {
+                //Console.WriteLine("Ingrese un Tipo Valido");
+                return false;
+            }
+            return true;
+        }
+
+        public bool VerifyType(string tipo) //verifies the type, returns false if it isnt incorrect, else it returns true or error
+        {
+            foreach(string tipe in ValidTypes)
+            {
+                if(tipo == tipe)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public void Activate(string id) //Deactivates any active campaign present, it considers only one active at the time
