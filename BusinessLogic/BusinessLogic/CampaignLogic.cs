@@ -13,7 +13,7 @@ namespace CampaignModule.BusinessLogic
     {
         private ICampaignTableDB _campaignDB; // DB of campaign
         public List<Campaign> allCampaign; //Data of DB
-        public List<string> ValidTypes = new List<string> {"Navidad","Verano","Black Friday","Primavera" };
+        public List<string> ValidTypes = new List<string> {"Navidad","Verano","Black Friday" };
 
         public CampaignLogic(ICampaignTableDB campaignDB)
         {
@@ -44,14 +44,14 @@ namespace CampaignModule.BusinessLogic
 
                 if (allCampaign.Count == 0) //verifies if allCampaigns is empty
                 {
-                    input.Id = "CAMPIGN-1"; //if it is, its first member has id = 1
+                    input.Id = "CAMPAIGN-1"; //if it is, its first member has id = 1
                 }
                 else
                 {
                     Campaign c = allCampaign.Last();
                     string[] fracment = c.Id.Split("-");
                     int lastId = Int32.Parse(fracment[1]) + 1;
-                    input.Id = "CAMPIGN-" + lastId; //if not, it is the last id + 1
+                    input.Id = "CAMPAIGN-" + lastId; //if not, it is the last id + 1
                 }
                 SelectType(input);
                 if (input.Active)
@@ -61,7 +61,7 @@ namespace CampaignModule.BusinessLogic
                         input.Active = false;//input campaign can´t be activate
                     }
                 }
-                allCampaign.Add(input); //Creates Campaign in DataBase
+                _campaignDB.Create(input); //Creates Campaign in DataBase
                 return campaign;
             }
             return null;
@@ -71,8 +71,7 @@ namespace CampaignModule.BusinessLogic
         public void Put(CampaignDTO campaign, string id) //Update, all fields in one
         {
 
-            if (VerifyFields(campaign))
-            {
+           
                 UpdateLocalDB();
 
                 foreach (Campaign c in allCampaign)
@@ -102,7 +101,7 @@ namespace CampaignModule.BusinessLogic
 
                     } //if none found does nothing
                 }
-            }
+            
             
         }
         public void Delete(string id) // Delete
@@ -112,9 +111,7 @@ namespace CampaignModule.BusinessLogic
             {
                 if (c.Id == id)
                 {
-                    allCampaign.Remove(c);
-
-                    _campaignDB.Delete(c); //Delete Campaign in DataBase 
+                   _campaignDB.Delete(c); //Delete Campaign in DataBase 
                     break;
                 }
 
@@ -206,9 +203,7 @@ namespace CampaignModule.BusinessLogic
                 case "Black Friday":
                     input.Type = "BFRIDAY";
                     break;
-                case "Primavera":
-                    input.Type = "SPRING";
-                    break;
+              
                 default:
                     break;
             }
@@ -217,7 +212,7 @@ namespace CampaignModule.BusinessLogic
         public Campaign ConvDTOtoDB(CampaignDTO old) //Converts a DTOCampaign to a DB Campaign
         {
             Campaign valid = new Campaign();
-            if (old.Id != "CAMPIGN-0")
+            if (old.Id != "CAMPAIGN-0")
                 valid.Id = old.Id;
             valid.Name = old.Name;
             valid.Description = old.Description;
