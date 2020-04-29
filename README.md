@@ -15,7 +15,15 @@
 	File Management
 - Task 7:
 	Functionality Testing and fixes
+- Task 8:
+	Acces routes modifications, activate and deactivate methods
+- Task 9:
+	Configuration files updates
+- Task 10:
+	Modifications for string based id
+- Task 11:
+	General Fixes and Observations
 
 ## General Info
-- SWAGGER URL IN RUNTIME: http://localhost:5000/swagger/index.html
+- SWAGGER URL IN RUNTIME: http://localhost:4401/swagger/index.html
 - github Repository: https://github.com/vanebustillos/CampaignModuleRepository
