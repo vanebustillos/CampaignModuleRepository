@@ -23,7 +23,12 @@
 	Modifications for string based id
 - Task 11:
 	General Fixes and Observations
-
-## General Info
-- SWAGGER URL IN RUNTIME: http://localhost:4401/swagger/index.html
-- github Repository: https://github.com/vanebustillos/CampaignModuleRepository
+FINAL TASKS
+- Task 12:
+	DB Json -> Rodrigo Heredia
+- Task 13:
+	EndPoints on API-GATEWAY -> Melisa Rojas
+- Task 14:
+	Error Handling -> Ruben Maldonado
+- Task 15:
+	Logs Record -> Andres Gamboa 
