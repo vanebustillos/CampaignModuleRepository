@@ -1,0 +1,6 @@
+[
+{"Id":"CAMPAIGN-1","Name":"Christmas Part I","Type":"XMAS","Description":"Before 24th December","Active":false},
+{"Id":"CAMPAIGN-2","Name":"Christmas Part II","Type":"XMAS","Description":"After 25th December","Active":false},
+{"Id":"CAMPAIGN-3","Name":"Summer discounts","Type":"SUMMER","Description":"All July","Active":false},
+{"Id":"CAMPAIGN-4","Name":"Black Friday discounts","Type":"BFRIDAY","Description":"Buy all you can","Active":false}
+]
