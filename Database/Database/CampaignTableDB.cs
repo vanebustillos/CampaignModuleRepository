@@ -31,13 +31,14 @@ namespace CampaignModule.Database
             InitDBContext(); // new List<T>()   
         }
 
-        public void InitDBContext()
+        public async void InitDBContext()
         {
+            
+            // read path from config for DB (JSON)
+            _dbPath = _configuration.GetSection("Database").GetSection("connectionString").Value;
+            
             try
             {
-                // read path from config for DB (JSON)
-                _dbPath = _configuration.GetSection("Database").GetSection("connectionString").Value;
-
                 // "Connect to JSON File" => DeserializeObject
                 _campaignList = JsonConvert.DeserializeObject<List<Campaign>>(File.ReadAllText(_dbPath));
 
@@ -47,9 +48,10 @@ namespace CampaignModule.Database
             }
             catch(Exception ex)
             {
-                throw new Database_Exceptions("Bs trows the error: " + _dbPath);
+                throw new Database_Exceptions("Problems in: " + _dbPath);
             }
         }
+
         public void SaveChanges()
         {
             File.WriteAllText(_dbPath, JsonConvert.SerializeObject(_campaignList)); //_dbContext
