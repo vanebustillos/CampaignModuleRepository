@@ -14,15 +14,6 @@ namespace CampaignModule.Database
         private string _dbPath;
         //private DBContext _dbContext;
         private List<Campaign> _campaignList;
-
-        /*List<Campaign> DataBase = new List<Campaign>
-        {
-                new Campaign() { Id = "CAMPAIGN-1",Name = "Christmas Part I", Type = "XMAS", Description = "Before 24th December", Active = false},
-                new Campaign() { Id = "CAMPAIGN-2",Name = "Christmas Part II", Type = "XMAS", Description = "After 25th December", Active = false},
-                new Campaign() { Id = "CAMPAIGN-3",Name = "Summer discounts", Type = "SUMMER", Description = "All July", Active = false},
-                new Campaign() { Id = "CAMPAIGN-4",Name = "Black Friday discounts", Type = "BFRIDAY", Description = "Buy all you can", Active = false}
-        };*/
-
         public CampaignTableDB(IConfiguration configuration)
         {
             // assign config
@@ -64,6 +55,8 @@ namespace CampaignModule.Database
 
         public Campaign Create(Campaign campaign) // Creates a New Campaign 
         {
+           
+            
             //DataBase.Add(campaign);
             _campaignList.Add(campaign);
             SaveChanges();
@@ -72,7 +65,8 @@ namespace CampaignModule.Database
 
         public void Update(Campaign campaign) //Updates all fields in a Campaign except its id
         {
-            foreach(Campaign camp in _campaignList) //DataBase
+            
+            foreach (Campaign camp in _campaignList) //DataBase
             {
                 if (camp == campaign)
                 {
@@ -95,7 +89,7 @@ namespace CampaignModule.Database
 
         public bool OneCampaignActive()
         {
-            foreach(Campaign campaign in _campaignList) //DataBase
+            foreach (Campaign campaign in _campaignList) //DataBase
             {
                 if (campaign.Active)
                 {

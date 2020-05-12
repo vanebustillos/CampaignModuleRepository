@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using CampaignModule.BusinessLogic;
 using CampaignModule.Database;
 using CampaignModule.Middleware;
+using Serilog;
+using Serilog.Events;
 
 namespace CampaignModule
 {
@@ -24,6 +26,17 @@ namespace CampaignModule
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+
+            string logpath = Configuration.GetSection("Logging").GetSection("FileLocation").Value;
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel
+                .Information()
+                .WriteTo.Console()
+                .WriteTo.RollingFile(logpath, LogEventLevel.Information)
+                .CreateLogger();
+
+            Log.Information("This app is using the config file: " + $"appsettings.{env.EnvironmentName}.json");
         }
 
         public IConfiguration Configuration { get; }
