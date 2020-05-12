@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using CampaignModule.Database.Models;
-using Database.Database.Models;
 using Database.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;

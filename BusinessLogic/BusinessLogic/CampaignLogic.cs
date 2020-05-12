@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using BusinessLogic.Exceptions;
 using CampaignModule.Controllers.DTOModels;
 using CampaignModule.Database;
 using CampaignModule.Database.Models;
-
 
 namespace CampaignModule.BusinessLogic
 {
@@ -13,7 +13,7 @@ namespace CampaignModule.BusinessLogic
     {
         private ICampaignTableDB _campaignDB; // DB of campaign
         public List<Campaign> allCampaign; //Data of DB
-        public List<string> ValidTypes = new List<string> {"Navidad","Verano","Black Friday" };
+        public List<string> ValidTypes = new List<string> {"navidad","verano","black friday" };
 
         public CampaignLogic(ICampaignTableDB campaignDB)
         {
@@ -76,7 +76,7 @@ namespace CampaignModule.BusinessLogic
 
                 foreach (Campaign c in allCampaign)
                 {
-                    if (c.Id == id)
+                    if (c.Id == id.Trim())
                     {
                         Campaign input = ConvDTOtoDB(campaign);
                         if (input.Name != null)
@@ -126,17 +126,17 @@ namespace CampaignModule.BusinessLogic
 
         public bool VerifyFields(CampaignDTO campaign) //Reviews all the input fields of type string to verify its correctnes, returns false if an error is found
         {
-            if (campaign.Name == null || campaign.Name == "") //Verify if name is null or empty
+            if (String.IsNullOrEmpty(campaign.Name.Trim())) //Verify if name is null or empty
             {
                 //Console.WriteLine("Ingrese un nombre");
                 return false;
             }
-            if (campaign.Description == null || campaign.Description == "") //Verify if description is null or empty
+            if (String.IsNullOrEmpty(campaign.Description.Trim())) //Verify if description is null or empty
             {
                 //Console.WriteLine("Ingrese una descripcion");
                 return false;
             }
-            if (campaign.Type == null || VerifyType(campaign.Type)) //Verify if type is null or invalid
+            if (String.IsNullOrEmpty(campaign.Type.Trim()) || VerifyType(campaign.Type)) //Verify if type is null or invalid
             {
                 //Console.WriteLine("Ingrese un Tipo Valido");
                 return false;
@@ -146,9 +146,10 @@ namespace CampaignModule.BusinessLogic
 
         public bool VerifyType(string tipo) //verifies the type, returns false if it isnt incorrect, else it returns true or error
         {
+            string tipoMinuscula = tipo.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Trim();
             foreach(string tipe in ValidTypes)
             {
-                if(tipo == tipe)
+                if(tipoMinuscula == tipe)
                 {
                     return false;
                 }
@@ -192,15 +193,15 @@ namespace CampaignModule.BusinessLogic
 
         public void SelectType(Campaign input)
         {
-            switch (input.Type) // assigns a tipe of campaign
+            switch (input.Type.Trim()) // assigns a tipe of campaign
             {
-                case "Navidad":
+                case "navidad":
                     input.Type = "XMAS";
                     break;
-                case "Verano":
+                case "verano":
                     input.Type = "SUMMER";
                     break;
-                case "Black Friday":
+                case "black friday":
                     input.Type = "BFRIDAY";
                     break;
               
