@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CampaignModule.BusinessLogic;
 using CampaignModule.Database;
+using CampaignModule.Middleware;
 
 namespace CampaignModule
 {
@@ -71,11 +72,16 @@ namespace CampaignModule
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseExceptionHandlerMiddleware();
 
             //app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseAuthorization();
+
+            app.UseCors("AllowAll");
+
+            app.UseAuthorization(); //AuthorizationMiddleware
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
