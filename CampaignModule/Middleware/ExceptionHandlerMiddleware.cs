@@ -42,6 +42,11 @@ namespace CampaignModule.Middleware
                 httpStatusCode = (int)HttpStatusCode.ServiceUnavailable;
                 messageToShow = ex.Message;
             }
+            else if (ex is BusinessLogic_Exceptions)
+            {
+                httpStatusCode = 206;
+                messageToShow = ex.Message;
+            }
             else
             {
                 httpStatusCode = (int)HttpStatusCode.InternalServerError;
