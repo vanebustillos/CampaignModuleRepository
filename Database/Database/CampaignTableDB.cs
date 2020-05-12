@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using CampaignModule.Database.Models;
-using Database.Database.Models;
+using Database.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -21,18 +21,27 @@ namespace CampaignModule.Database
             InitDBContext(); // new List<T>()   
         }
 
-        public void InitDBContext()
+        public async void InitDBContext()
         {
+            
             // read path from config for DB (JSON)
             _dbPath = _configuration.GetSection("Database").GetSection("connectionString").Value;
+            
+            try
+            {
+                // "Connect to JSON File" => DeserializeObject
+                _campaignList = JsonConvert.DeserializeObject<List<Campaign>>(File.ReadAllText(_dbPath));
 
-            // "Connect to JSON File" => DeserializeObject
-            _campaignList = JsonConvert.DeserializeObject<List<Campaign>>(File.ReadAllText(_dbPath));
-
-            // "Connect to JSON File" => DeserializeObject
-            //_dbContext = JsonConvert.DeserializeObject<DBContext>(File.ReadAllText(_dbPath));
-            //_campaignList = _dbContext.campaigns;
+                // "Connect to JSON File" => DeserializeObject
+                //_dbContext = JsonConvert.DeserializeObject<DBContext>(File.ReadAllText(_dbPath));
+                //_campaignList = _dbContext.campaigns;
+            }
+            catch(Exception ex)
+            {
+                throw new Database_Exceptions("Problems in: " + _dbPath);
+            }
         }
+
         public void SaveChanges()
         {
             File.WriteAllText(_dbPath, JsonConvert.SerializeObject(_campaignList)); //_dbContext
