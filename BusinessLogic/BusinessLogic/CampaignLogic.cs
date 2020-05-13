@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using BusinessLogic.Exceptions;
 using CampaignModule.Controllers.DTOModels;
 using CampaignModule.Database;
 using CampaignModule.Database.Models;
-using Serilog;
+
 
 namespace CampaignModule.BusinessLogic
 {
@@ -14,7 +13,7 @@ namespace CampaignModule.BusinessLogic
     {
         private ICampaignTableDB _campaignDB; // DB of campaign
         public List<Campaign> allCampaign; //Data of DB
-        public List<string> ValidTypes = new List<string> { "navidad", "verano", "black friday" };
+        public List<string> ValidTypes = new List<string> {"Navidad","Verano","Black Friday" };
 
         public CampaignLogic(ICampaignTableDB campaignDB)
         {
@@ -27,12 +26,11 @@ namespace CampaignModule.BusinessLogic
         public List<CampaignDTO> Get() //Read, returns a list of all its members
         {
             UpdateLocalDB();
-            List<CampaignDTO> Datos = new List<CampaignDTO>();
+            List<CampaignDTO> Datos = new List<CampaignDTO>(); 
             foreach (Campaign camp in allCampaign)
             {
                 Datos.Add(ConvDBtoDTO(camp));
             }
-            Log.Logger.Information("Client Asked for Campaign list");
             return Datos;
 
         }
@@ -61,65 +59,59 @@ namespace CampaignModule.BusinessLogic
                     if (_campaignDB.OneCampaignActive()) //if a campaign is already active
                     {
                         input.Active = false;//input campaign can´t be activate
-                        Log.Logger.Information("New Campaign cannot be set as active, there is one already activated");
                     }
                 }
-                Log.Logger.Information("Client Created a new Campaign: " + input.Id);
                 _campaignDB.Create(input); //Creates Campaign in DataBase
                 return campaign;
             }
-            else
-            {
-                Log.Logger.Information("Error Ocurred: Missing Values on Post");
-                throw new BusinessLogic_Exceptions("Error: Incorrect Values on Post: NullReferenceException");
-            }
-
+            return null;
+            
         }
 
         public void Put(CampaignDTO campaign, string id) //Update, all fields in one
         {
-            UpdateLocalDB();
 
-            foreach (Campaign c in allCampaign)
-            {
-                if (c.Id == id.Trim().ToUpper())
+           
+                UpdateLocalDB();
+
+                foreach (Campaign c in allCampaign)
                 {
-                    Campaign input = ConvDTOtoDB(campaign);
-                    if (input.Name != null)
-                        c.Name = input.Name;
-                    if (input.Type != null)
+                    if (c.Id == id)
                     {
-                        SelectType(input);
-                        c.Type = input.Type;
-                    }
-                    if (input.Description != null)
-                        c.Description = input.Description;
-                    if (input.Active) //removes active campaign if any
-                    {
+                        Campaign input = ConvDTOtoDB(campaign);
+                        if (input.Name != null)
+                            c.Name = input.Name;
+                        if (input.Type != null)
+                        {
+                            SelectType(input);
+                            c.Type = input.Type;
+                        }
+                        if (input.Description != null)
+                            c.Description = input.Description;
+                        if (input.Active) //removes active campaign if any
+                        {
+                            Activate(id);//activate campaign
+                        }
+                        else
+                        {
+                            Deactivate(id); //deactivate campaign
+                        }
+                        _campaignDB.Update(input); //Updates Campaign in DataBase 
+                        break;
 
-                        Activate(id);//activate campaign
-                    }
-                    else
-                    {
-                        Deactivate(id); //deactivate campaign
-                    }
-                    Log.Logger.Information("Client Updated Campaign: " + id);
-                    _campaignDB.Update(input); //Updates Campaign in DataBase 
-                    break;
-
-                } //if none found does nothing
-
-            }
+                    } //if none found does nothing
+                }
+            
+            
         }
         public void Delete(string id) // Delete
         {
             UpdateLocalDB();
             foreach (Campaign c in allCampaign)
             {
-                if (c.Id == id.Trim().ToUpper())
+                if (c.Id == id)
                 {
-                    Log.Logger.Information("Client Deleted Campaign: " + id);
-                    _campaignDB.Delete(c); //Delete Campaign in DataBase 
+                   _campaignDB.Delete(c); //Delete Campaign in DataBase 
                     break;
                 }
 
@@ -134,57 +126,34 @@ namespace CampaignModule.BusinessLogic
 
         public bool VerifyFields(CampaignDTO campaign) //Reviews all the input fields of type string to verify its correctnes, returns false if an error is found
         {
-            try
+            if (campaign.Name == null || campaign.Name == "") //Verify if name is null or empty
             {
-                if (String.IsNullOrEmpty(campaign.Name.Trim())) //Verify if name is null or empty
-                {
-                    //Log.Logger.Information("Error: Missing Name Value, Operation Aborted");
-
-                    //Console.WriteLine("Ingrese un nombre");
-                    return false;
-                    // throw new BusinessLogic_Exceptions("Error: Missing Name Value");
-                }
-                if (String.IsNullOrEmpty(campaign.Description.Trim())) //Verify if description is null or empty
-                {
-                    //Log.Logger.Information("Error: Missing Description Value, Operation Aborted");
-
-                    //Console.WriteLine("Ingrese una descripcion");
-                    return false;
-                    // throw new BusinessLogic_Exceptions("Error: Missing Description Value");
-                }
-                if (String.IsNullOrEmpty(campaign.Type.Trim()) || VerifyType(campaign.Type)) //Verify if type is null or invalid
-                {
-                    //Log.Logger.Information("Error: Incorrect Type Value, Operation Aborted");
-
-                    //Console.WriteLine("Ingrese un Tipo Valido");
-                    return false;
-                    // throw new BusinessLogic_Exceptions("Error: Incorrect Type Value, just accept verano, navidad, black friday");
-                }
-                return true;
-            }
-            catch (NullReferenceException ex)
-            {
-
-                Console.WriteLine("Error: Incorrect Values on Post");
+                //Console.WriteLine("Ingrese un nombre");
                 return false;
             }
+            if (campaign.Description == null || campaign.Description == "") //Verify if description is null or empty
+            {
+                //Console.WriteLine("Ingrese una descripcion");
+                return false;
+            }
+            if (campaign.Type == null || VerifyType(campaign.Type)) //Verify if type is null or invalid
+            {
+                //Console.WriteLine("Ingrese un Tipo Valido");
+                return false;
+            }
+            return true;
         }
 
         public bool VerifyType(string tipo) //verifies the type, returns false if it isnt incorrect, else it returns true or error
         {
-            string tipoMinuscula = tipo.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Trim();
-            foreach (string tipe in ValidTypes)
+            foreach(string tipe in ValidTypes)
             {
-                if (tipoMinuscula == tipe)
+                if(tipo == tipe)
                 {
-                    //Log.Logger.Information("Error Ocurred: Incorrect value of Type , Operation Aborted");
                     return false;
-                    //throw new BusinessLogic_Exceptions("Error: Valor de Tipo erróneo, sólo se aceptan navidad, black friday o verano.");
                 }
             }
-
             return true;
-            // throw new BusinessLogic_Exceptions("Error: Valor de Tipo erróneo, sólo se aceptan navidad, black friday o verano.");
         }
 
         public void Activate(string id) //Deactivates any active campaign present, it considers only one active at the time
@@ -192,16 +161,15 @@ namespace CampaignModule.BusinessLogic
             UpdateLocalDB();
             foreach (Campaign c2 in allCampaign)
             {
-                if (c2.Id == id.Trim())
+                if (c2.Id == id)
                 {
                     if (!_campaignDB.OneCampaignActive())//if no campaign is active
                     {
-                        Log.Logger.Information("Client Activated Campaign: " + id);
                         c2.Active = true; //input campaign is activate
                         _campaignDB.Update(c2);
-
+                        
                     }
-                    break;
+                     break;
                 }
             }
         }
@@ -215,7 +183,6 @@ namespace CampaignModule.BusinessLogic
                     if (c2.Active)
                     {
                         c2.Active = false;
-                        Log.Logger.Information("Client Deactivated Campaign: " + id);
                         _campaignDB.Update(c2);
                         break;
                     }
@@ -225,18 +192,18 @@ namespace CampaignModule.BusinessLogic
 
         public void SelectType(Campaign input)
         {
-            switch (input.Type.Trim().ToLower()) // assigns a tipe of campaign
+            switch (input.Type) // assigns a tipe of campaign
             {
-                case "navidad":
+                case "Navidad":
                     input.Type = "XMAS";
                     break;
-                case "verano":
+                case "Verano":
                     input.Type = "SUMMER";
                     break;
-                case "black friday":
+                case "Black Friday":
                     input.Type = "BFRIDAY";
                     break;
-
+              
                 default:
                     break;
             }
@@ -257,7 +224,7 @@ namespace CampaignModule.BusinessLogic
         public CampaignDTO ConvDBtoDTO(Campaign old) //Converts a DB Campaign to a DTOCampaign
         {
             CampaignDTO valid = new CampaignDTO();
-
+             
             valid.Id = old.Id;
             valid.Name = old.Name;
             valid.Description = old.Description;
@@ -265,6 +232,6 @@ namespace CampaignModule.BusinessLogic
             valid.Active = old.Active;
             return valid;
         }
-
+        
     }
 }
