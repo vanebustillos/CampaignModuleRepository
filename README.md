@@ -35,4 +35,4 @@ FINAL TASKS
 - Task 16:
 	More exceptions -> Ruben Maldonado 
 - Task 17:
-	More Logs -> Andres Gamboa 
+	More Logs and Endpoint GetActive-> Andres Gamboa 

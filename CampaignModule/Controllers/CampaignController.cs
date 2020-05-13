@@ -31,13 +31,13 @@ namespace CampaignModule.Controllers
         }
 
         // GET: api/Campaign/active
-        /*[HttpGet]
+        [HttpGet]
         [Route("campaigns/active")]
-        public IEnumerable<CampaignDTO> GetActive()
+        public CampaignDTO GetActive()
         {
             Log.Logger.Information("Client trying to Get Active Campaign");
             return _campaignLogic.GetActive(); // Read, Returns all elements in database
-        }*/
+        }
 
         // POST: api/Campaign
         [HttpPost]

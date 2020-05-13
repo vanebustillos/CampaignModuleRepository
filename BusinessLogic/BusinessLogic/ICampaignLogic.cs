@@ -8,6 +8,7 @@ namespace CampaignModule.BusinessLogic
     public interface ICampaignLogic
     {
         public List<CampaignDTO> Get(); //Read all
+        public CampaignDTO GetActive(); //GetActive
         public CampaignDTO Post(CampaignDTO campaign); //Create
         public void Put(CampaignDTO campaign, string id); //Update
         public void Delete(string id); //Delete

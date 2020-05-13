@@ -36,6 +36,29 @@ namespace CampaignModule.BusinessLogic
             return Datos;
 
         }
+        public CampaignDTO GetActive() 
+        {
+            UpdateLocalDB();
+            CampaignDTO active = new CampaignDTO();
+            var exists =false;
+            foreach (Campaign camp in allCampaign)
+            {
+                if(camp.Active)
+                {
+                    active = ConvDBtoDTO(camp);
+                    exists = true;
+                }
+                
+            }
+            if(!exists)
+            {
+                throw new BusinessLogic_Exceptions("Error: No active Campaign found");
+            }
+            
+            Log.Logger.Information("Client Asked for Active Campaign");
+            return active;
+
+        }
 
         public CampaignDTO Post(CampaignDTO campaign) //Creates a new Campaign
         {
