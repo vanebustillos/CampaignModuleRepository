@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CampaignModule.Database.Models;
+using Database.Database;
 
 namespace CampaignModule.Database
 {
-    public interface ICampaignTableDB
+    public interface ICampaignTableDB : IDBManager
     {
         public List<Campaign> GetAll(); //Get, Read all in Database
         public Campaign Create(Campaign campaign); //Post

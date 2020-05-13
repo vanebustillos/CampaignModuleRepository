@@ -33,7 +33,6 @@ namespace CampaignModule.Controllers
         [Route("campaigns")]
         public CampaignDTO Post([FromBody] CampaignDTO campaign)
         {
-            Console.WriteLine("from post => " + campaign.Id + " - " + campaign.Name + " - " + campaign.Type + " - " + campaign.Description);
             _campaignLogic.Post(campaign); //Create, Makes a new Campaign
             var dbServer = _configuration.GetSection("Database").GetSection("ServerName");
             campaign.Name = $"{campaign.Name} data from {dbServer.Value}";

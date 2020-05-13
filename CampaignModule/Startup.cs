@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CampaignModule.BusinessLogic;
 using CampaignModule.Database;
+using CampaignModule.Middleware;
+using Serilog;
+using Serilog.Events;
 
 namespace CampaignModule
 {
@@ -23,6 +26,17 @@ namespace CampaignModule
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+
+            string logpath = Configuration.GetSection("Logging").GetSection("FileLocation").Value;
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel
+                .Information()
+                .WriteTo.Console()
+                .WriteTo.RollingFile(logpath, LogEventLevel.Information)
+                .CreateLogger();
+
+            Log.Information("This app is using the config file: " + $"appsettings.{env.EnvironmentName}.json");
         }
 
         public IConfiguration Configuration { get; }
@@ -33,6 +47,15 @@ namespace CampaignModule
             services.AddControllers(); //Imports Controllers
             services.AddTransient<ICampaignLogic, CampaignLogic>(); //Imports Campaign Logic
             services.AddSingleton<ICampaignTableDB, CampaignTableDB>(); //Imports DATABASE
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => builder.WithOrigins("*")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      );
+            });
 
             var swaggerTitle = Configuration
                 .GetSection(SWAGGER_SECTION_SETTING_KEY)
@@ -62,11 +85,16 @@ namespace CampaignModule
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseExceptionHandlerMiddleware();
 
             //app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseAuthorization();
+
+            app.UseCors("AllowAll");
+
+            app.UseAuthorization(); //AuthorizationMiddleware
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
