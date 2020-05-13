@@ -138,27 +138,26 @@ namespace CampaignModule.BusinessLogic
             {
                 if (String.IsNullOrEmpty(campaign.Name.Trim())) //Verify if name is null or empty
                 {
-                    //Log.Logger.Information("Error: Missing Name Value, Operation Aborted");
+                    Log.Logger.Information("Missing Name Value, Operation Aborted");
 
-                    //Console.WriteLine("Ingrese un nombre");
+                    Console.WriteLine("Ingrese un nombre");
                     return false;
-                    // throw new BusinessLogic_Exceptions("Error: Missing Name Value");
+                 
                 }
                 if (String.IsNullOrEmpty(campaign.Description.Trim())) //Verify if description is null or empty
                 {
-                    //Log.Logger.Information("Error: Missing Description Value, Operation Aborted");
+                    Log.Logger.Information("Missing Description Value, Operation Aborted");
 
-                    //Console.WriteLine("Ingrese una descripcion");
                     return false;
-                    // throw new BusinessLogic_Exceptions("Error: Missing Description Value");
+                   
                 }
                 if (String.IsNullOrEmpty(campaign.Type.Trim()) || VerifyType(campaign.Type)) //Verify if type is null or invalid
                 {
-                    //Log.Logger.Information("Error: Incorrect Type Value, Operation Aborted");
+                    Log.Logger.Information("Incorrect Type Value, Operation Aborted");
 
                     //Console.WriteLine("Ingrese un Tipo Valido");
                     return false;
-                    // throw new BusinessLogic_Exceptions("Error: Incorrect Type Value, just accept verano, navidad, black friday");
+                  
                 }
                 return true;
             }
@@ -177,14 +176,13 @@ namespace CampaignModule.BusinessLogic
             {
                 if (tipoMinuscula == tipe)
                 {
-                    //Log.Logger.Information("Error Ocurred: Incorrect value of Type , Operation Aborted");
+                    Log.Logger.Information("Incorrect value of Type , Operation Aborted");
                     return false;
-                    //throw new BusinessLogic_Exceptions("Error: Valor de Tipo erróneo, sólo se aceptan navidad, black friday o verano.");
                 }
             }
 
             return true;
-            // throw new BusinessLogic_Exceptions("Error: Valor de Tipo erróneo, sólo se aceptan navidad, black friday o verano.");
+        
         }
 
         public void Activate(string id) //Deactivates any active campaign present, it considers only one active at the time
