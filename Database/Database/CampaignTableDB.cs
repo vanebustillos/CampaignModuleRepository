@@ -38,7 +38,7 @@ namespace CampaignModule.Database
             }
             catch(Exception ex)
             {
-                throw new Database_Exceptions("Problems in: " + _dbPath);
+                throw new Database_Exceptions("No se encontró el archivo JSON en el directorio " + _dbPath);
             }
         }
 
