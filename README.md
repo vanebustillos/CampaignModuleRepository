@@ -34,3 +34,5 @@ FINAL TASKS
 	Logs Record -> Andres Gamboa 
 - Task 16:
 	More exceptions -> Ruben Maldonado 
+- Task 17:
+	More Logs -> Andres Gamboa 

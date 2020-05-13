@@ -5,6 +5,7 @@ using CampaignModule.Database.Models;
 using Database.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace CampaignModule.Database
 {
@@ -38,6 +39,7 @@ namespace CampaignModule.Database
             }
             catch(Exception ex)
             {
+                Log.Logger.Information("Error Ocurred: JSON Database File not Found");
                 throw new Database_Exceptions("No se encontró el archivo JSON en el directorio " + _dbPath);
             }
         }
@@ -56,7 +58,6 @@ namespace CampaignModule.Database
         public Campaign Create(Campaign campaign) // Creates a New Campaign 
         {
            
-            
             //DataBase.Add(campaign);
             _campaignList.Add(campaign);
             SaveChanges();

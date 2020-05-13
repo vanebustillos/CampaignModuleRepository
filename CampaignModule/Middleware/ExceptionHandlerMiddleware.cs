@@ -8,6 +8,7 @@ using Database.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace CampaignModule.Middleware
 {
@@ -58,7 +59,7 @@ namespace CampaignModule.Middleware
                 status = httpStatusCode,
                 message = messageToShow
             };
-
+            //Log.Logger.Information("Error: " + errorModel.message);
             return httpContext.Response.WriteAsync(JsonConvert.SerializeObject(errorModel));
         }
     }
