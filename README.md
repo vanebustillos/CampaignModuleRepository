@@ -32,3 +32,5 @@ FINAL TASKS
 	Error Handling -> Ruben Maldonado
 - Task 15:
 	Logs Record -> Andres Gamboa 
+- Task 16:
+	More exceptions -> Ruben Maldonado 
