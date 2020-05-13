@@ -64,7 +64,11 @@ namespace CampaignModule.BusinessLogic
                 _campaignDB.Create(input); //Creates Campaign in DataBase
                 return campaign;
             }
-            return null;
+            else
+            {
+                return null;
+                throw new BusinessLogic_Exceptions("Error: Valores faltantes en el Post: NullReferenceException");
+            }
 
         }
 
@@ -74,7 +78,7 @@ namespace CampaignModule.BusinessLogic
 
             foreach (Campaign c in allCampaign)
             {
-                if (c.Id == id.Trim())
+                if (c.Id == id.Trim().ToUpper())
                 {
                     Campaign input = ConvDTOtoDB(campaign);
                     if (input.Name != null)
@@ -105,7 +109,7 @@ namespace CampaignModule.BusinessLogic
             UpdateLocalDB();
             foreach (Campaign c in allCampaign)
             {
-                if (c.Id == id)
+                if (c.Id == id.Trim().ToUpper())
                 {
                     _campaignDB.Delete(c); //Delete Campaign in DataBase 
                     break;
@@ -141,9 +145,10 @@ namespace CampaignModule.BusinessLogic
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (NullReferenceException ex)
             {
-                throw new BusinessLogic_Exceptions("Error: Valores faltantes en el Post");
+                Console.WriteLine("Error: Valores faltantes en el Post");
+                return false;
             }
         }
 
@@ -158,6 +163,7 @@ namespace CampaignModule.BusinessLogic
                 }
             }
             return true;
+            throw new BusinessLogic_Exceptions("Error: Valor de Tipo erróneo, sólo se aceptan navidad, black friday o verano.");
         }
 
         public void Activate(string id) //Deactivates any active campaign present, it considers only one active at the time
@@ -165,7 +171,7 @@ namespace CampaignModule.BusinessLogic
             UpdateLocalDB();
             foreach (Campaign c2 in allCampaign)
             {
-                if (c2.Id == id)
+                if (c2.Id == id.Trim())
                 {
                     if (!_campaignDB.OneCampaignActive())//if no campaign is active
                     {
@@ -196,7 +202,7 @@ namespace CampaignModule.BusinessLogic
 
         public void SelectType(Campaign input)
         {
-            switch (input.Type.Trim()) // assigns a tipe of campaign
+            switch (input.Type.Trim().ToLower()) // assigns a tipe of campaign
             {
                 case "navidad":
                     input.Type = "XMAS";

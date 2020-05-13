@@ -39,7 +39,7 @@ namespace CampaignModule.Middleware
             string messageToShow;
             if (ex is Database_Exceptions)
             {
-                httpStatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                httpStatusCode = 404;
                 messageToShow = ex.Message;
             }
             else if (ex is BusinessLogic_Exceptions)
