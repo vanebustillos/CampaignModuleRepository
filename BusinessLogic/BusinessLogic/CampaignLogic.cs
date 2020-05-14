@@ -149,7 +149,7 @@ namespace CampaignModule.BusinessLogic
             }
             if (wasDeleted == false)
             {
-                Log.Logger.Information("Client is trying to delete campaign: " + id + ", but that campaign doesn't exist");
+                Log.Logger.Information("Error: That Campaign doesn't Exist");
                 throw new BusinessLogic_Exceptions("Error: That campaign doesn't exist");
             }
         }
@@ -228,7 +228,7 @@ namespace CampaignModule.BusinessLogic
             }
             if (flagActivated == false)
             {
-                Log.Logger.Information("Client is trying to activate campaign: " + id + ", but there's already an active campaign");
+                Log.Logger.Information("Error: There's Already an Active Campaign");
                 throw new BusinessLogic_Exceptions("Error: There's already an active campaign");
             }
         }
@@ -254,7 +254,7 @@ namespace CampaignModule.BusinessLogic
             }
             if (flagDeactivated == false)
             {
-                Log.Logger.Information("Client is trying to deactivate campaign: " + id + ", but that campaign isn't active");
+                Log.Logger.Information("Error: That Campaign isn't Active");
                 throw new BusinessLogic_Exceptions("Error: That campaign isn't active");
             }
         }
@@ -280,7 +280,7 @@ namespace CampaignModule.BusinessLogic
             }
             if (flagActivated == false)
             {
-                Log.Logger.Information("Client is trying to activate campaign: " + id + ", but there's already an active campaign");
+                Log.Logger.Information("Error: There's Already an Active Campaign");
                 throw new BusinessLogic_Exceptions("Error: There's already an active campaign");
             }
         }
