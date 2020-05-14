@@ -31,7 +31,7 @@ namespace CampaignModule.BusinessLogic
             {
                 Datos.Add(ConvDBtoDTO(camp));
             }
-            Log.Logger.Information("Client Asked for Campaign list");
+            Log.Logger.Information("Succesfull");
             return Datos;
 
         }
@@ -55,7 +55,7 @@ namespace CampaignModule.BusinessLogic
                 throw new BusinessLogic_Exceptions("Error: No active Campaign found");
             }
 
-            Log.Logger.Information("Client Asked for Active Campaign");
+            Log.Logger.Information("Succesfull");
             return active;
 
         }
@@ -84,11 +84,11 @@ namespace CampaignModule.BusinessLogic
                     if (_campaignDB.OneCampaignActive()) //if a campaign is already active
                     {
                         input.Active = false; //input campaign can´t be activate
-                        Log.Logger.Information("New Campaign cannot be set as active, there is one already activated");
+                        Log.Logger.Information("Error: New Campaign cannot be set as active, there is one already activated");
                         throw new BusinessLogic_Exceptions("Error: There's already an active campaign");
                     }
                 }
-                Log.Logger.Information("Client Created a new Campaign: " + input.Id);
+                Log.Logger.Information("Succesfull");
                 _campaignDB.Create(input); //Creates Campaign in DataBase
                 return campaign;
             }
@@ -126,7 +126,7 @@ namespace CampaignModule.BusinessLogic
                     {
                         DeactivateUpdate(id); //deactivate campaign
                     }
-                    Log.Logger.Information("Client Updated Campaign: " + id);
+                    Log.Logger.Information("Succesfull");
                     _campaignDB.Update(input); //Updates Campaign in DataBase 
                     break;
                 } //if none found does nothing
@@ -142,7 +142,7 @@ namespace CampaignModule.BusinessLogic
                 if (c.Id == id.Trim().ToUpper())
                 {
                     wasDeleted = true;
-                    Log.Logger.Information("Client Deleted Campaign: " + id);
+                    Log.Logger.Information("Succesfull");
                     _campaignDB.Delete(c); //Delete Campaign in DataBase 
                     break;
                 }
@@ -166,21 +166,18 @@ namespace CampaignModule.BusinessLogic
             {
                 if (String.IsNullOrEmpty(campaign.Name.Trim())) //Verify if name is null or empty
                 {
-                    Log.Logger.Information("Missing Name Value, Operation Aborted");
+                    Log.Logger.Information("Error: Missing Name Value");
                     return false;
-                    //throw new BusinessLogic_Exceptions("Error: Missing Name Value");
                 }
                 if (String.IsNullOrEmpty(campaign.Description.Trim())) //Verify if description is null or empty
                 {
-                    Log.Logger.Information("Missing Description Value, Operation Aborted");
+                    Log.Logger.Information("Error: Missing Description Value");
                     return false;
-                    //throw new BusinessLogic_Exceptions("Error: Missing Description Value");
                 }
                 if (String.IsNullOrEmpty(campaign.Type.Trim()) || VerifyType(campaign.Type)) //Verify if type is null or invalid
                 {
-                    Log.Logger.Information("Incorrect Type Value, Operation Aborted");
+                    Log.Logger.Information("Error: Incorrect Type Value");
                     return false;
-                    //throw new BusinessLogic_Exceptions("Error: Incorrect Type Value");
                 }
                 return true;
             }
@@ -219,7 +216,7 @@ namespace CampaignModule.BusinessLogic
                     {
                         flagActivated = true;
                         //Activate campaign logic
-                        Log.Logger.Information("Client Activated Campaign: " + id);
+                        Log.Logger.Information("Succesfull");
                         c2.Active = true; //input campaign is activate
                         _campaignDB.Update(c2);
                     }
@@ -246,7 +243,7 @@ namespace CampaignModule.BusinessLogic
                         flagDeactivated = true;
                         //Deactivate campaign logic
                         c2.Active = false;
-                        Log.Logger.Information("Client Deactivated Campaign: " + id);
+                        Log.Logger.Information("Succesfull");
                         _campaignDB.Update(c2);
                         break;
                     }
@@ -271,7 +268,7 @@ namespace CampaignModule.BusinessLogic
                     {
                         flagActivated = true;
                         //Activate campaign logic
-                        Log.Logger.Information("Client Activated Campaign: " + id);
+                        Log.Logger.Information("Succesfull");
                         c2.Active = true; //input campaign is activate
                         _campaignDB.Update(c2);
                     }
@@ -294,7 +291,7 @@ namespace CampaignModule.BusinessLogic
                 {
                     //Deactivate campaign logic
                     c2.Active = false;
-                    Log.Logger.Information("Client Deactivated Campaign: " + id);
+                    Log.Logger.Information("Succesfull");
                     _campaignDB.Update(c2);
                     break;
                 }
@@ -315,7 +312,7 @@ namespace CampaignModule.BusinessLogic
                     input.Type = "BFRIDAY";
                     break;
                 default:
-                    Log.Logger.Information("Incorrect Type Value, Operation Aborted");
+                    Log.Logger.Information("Error: Incorrect Type Value");
                     throw new BusinessLogic_Exceptions("Error: Incorrect Type Value");
                     //break;
             }
