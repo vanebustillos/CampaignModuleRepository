@@ -13,7 +13,6 @@ namespace CampaignModule.Database
     {
         private readonly IConfiguration _configuration;
         private string _dbPath;
-        //private DBContext _dbContext;
         private List<Campaign> _campaignList;
         public CampaignTableDB(IConfiguration configuration)
         {
@@ -22,22 +21,18 @@ namespace CampaignModule.Database
             InitDBContext(); // new List<T>()   
         }
 
-        public async void InitDBContext()
+        public void InitDBContext()
         {
-            
+
             // read path from config for DB (JSON)
             _dbPath = _configuration.GetSection("Database").GetSection("connectionString").Value;
-            
+
             try
             {
                 // "Connect to JSON File" => DeserializeObject
                 _campaignList = JsonConvert.DeserializeObject<List<Campaign>>(File.ReadAllText(_dbPath));
-
-                // "Connect to JSON File" => DeserializeObject
-                //_dbContext = JsonConvert.DeserializeObject<DBContext>(File.ReadAllText(_dbPath));
-                //_campaignList = _dbContext.campaigns;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Logger.Information("Error Ocurred: JSON Database File not Found");
                 throw new Database_Exceptions("No se encontró el archivo JSON en el directorio " + _dbPath);
@@ -46,19 +41,16 @@ namespace CampaignModule.Database
 
         public void SaveChanges()
         {
-            File.WriteAllText(_dbPath, JsonConvert.SerializeObject(_campaignList)); //_dbContext
+            File.WriteAllText(_dbPath, JsonConvert.SerializeObject(_campaignList));
         }
 
         public List<Campaign> GetAll() //Read, returns all campaigns
         {
-            //return DataBase;
             return _campaignList;
         }
 
         public Campaign Create(Campaign campaign) // Creates a New Campaign 
         {
-           
-            //DataBase.Add(campaign);
             _campaignList.Add(campaign);
             SaveChanges();
             return campaign;
@@ -66,8 +58,8 @@ namespace CampaignModule.Database
 
         public void Update(Campaign campaign) //Updates all fields in a Campaign except its id
         {
-            
-            foreach (Campaign camp in _campaignList) //DataBase
+
+            foreach (Campaign camp in _campaignList)
             {
                 if (camp == campaign)
                 {
@@ -83,14 +75,13 @@ namespace CampaignModule.Database
 
         public void Delete(Campaign campaign) //Removes a Campaign
         {
-            //DataBase.Remove(campaign);
             _campaignList.Remove(campaign);
             SaveChanges();
         }
 
         public bool OneCampaignActive()
         {
-            foreach (Campaign campaign in _campaignList) //DataBase
+            foreach (Campaign campaign in _campaignList)
             {
                 if (campaign.Active)
                 {
