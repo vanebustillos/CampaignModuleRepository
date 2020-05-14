@@ -36,3 +36,7 @@ FINAL TASKS
 	More exceptions -> Ruben Maldonado 
 - Task 17:
 	More Logs and Endpoint GetActive-> Andres Gamboa 
+- Task 18:
+	Fixed Exceptions and Refactoring-> Rodrigo Heredia
+- Task 17:
+	Fixed some log messages-> Andres Gamboa 
