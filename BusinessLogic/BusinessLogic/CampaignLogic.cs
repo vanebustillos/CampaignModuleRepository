@@ -6,6 +6,7 @@ using BusinessLogic.Exceptions;
 using CampaignModule.Controllers.DTOModels;
 using CampaignModule.Database;
 using CampaignModule.Database.Models;
+using Serilog;
 
 namespace CampaignModule.BusinessLogic
 {
@@ -31,7 +32,31 @@ namespace CampaignModule.BusinessLogic
             {
                 Datos.Add(ConvDBtoDTO(camp));
             }
+            Log.Logger.Information("Client Asked for Campaign list");
             return Datos;
+
+        }
+        public CampaignDTO GetActive() 
+        {
+            UpdateLocalDB();
+            CampaignDTO active = new CampaignDTO();
+            var exists =false;
+            foreach (Campaign camp in allCampaign)
+            {
+                if(camp.Active)
+                {
+                    active = ConvDBtoDTO(camp);
+                    exists = true;
+                }
+                
+            }
+            if(!exists)
+            {
+                throw new BusinessLogic_Exceptions("Error: No active Campaign found");
+            }
+            
+            Log.Logger.Information("Client Asked for Active Campaign");
+            return active;
 
         }
 
@@ -59,15 +84,17 @@ namespace CampaignModule.BusinessLogic
                     if (_campaignDB.OneCampaignActive()) //if a campaign is already active
                     {
                         input.Active = false;//input campaign can´t be activate
+                        Log.Logger.Information("New Campaign cannot be set as active, there is one already activated");
                     }
                 }
+                Log.Logger.Information("Client Created a new Campaign: " + input.Id);
                 _campaignDB.Create(input); //Creates Campaign in DataBase
                 return campaign;
             }
             else
             {
-                return null;
-                throw new BusinessLogic_Exceptions("Error: Valores faltantes en el Post: NullReferenceException");
+                Log.Logger.Information("Error Ocurred: Missing Values on Post");
+                throw new BusinessLogic_Exceptions("Error: Incorrect Values on Post: NullReferenceException");
             }
 
         }
@@ -92,16 +119,19 @@ namespace CampaignModule.BusinessLogic
                         c.Description = input.Description;
                     if (input.Active) //removes active campaign if any
                     {
+
                         Activate(id);//activate campaign
                     }
                     else
                     {
                         Deactivate(id); //deactivate campaign
                     }
+                    Log.Logger.Information("Client Updated Campaign: " + id);
                     _campaignDB.Update(input); //Updates Campaign in DataBase 
                     break;
 
                 } //if none found does nothing
+
             }
         }
         public void Delete(string id) // Delete
@@ -111,6 +141,7 @@ namespace CampaignModule.BusinessLogic
             {
                 if (c.Id == id.Trim().ToUpper())
                 {
+                    Log.Logger.Information("Client Deleted Campaign: " + id);
                     _campaignDB.Delete(c); //Delete Campaign in DataBase 
                     break;
                 }
@@ -130,24 +161,33 @@ namespace CampaignModule.BusinessLogic
             {
                 if (String.IsNullOrEmpty(campaign.Name.Trim())) //Verify if name is null or empty
                 {
-                    //Console.WriteLine("Ingrese un nombre");
+                    Log.Logger.Information("Missing Name Value, Operation Aborted");
+
+                    Console.WriteLine("Ingrese un nombre");
                     return false;
+                 
                 }
                 if (String.IsNullOrEmpty(campaign.Description.Trim())) //Verify if description is null or empty
                 {
-                    //Console.WriteLine("Ingrese una descripcion");
+                    Log.Logger.Information("Missing Description Value, Operation Aborted");
+
                     return false;
+                   
                 }
                 if (String.IsNullOrEmpty(campaign.Type.Trim()) || VerifyType(campaign.Type)) //Verify if type is null or invalid
                 {
+                    Log.Logger.Information("Incorrect Type Value, Operation Aborted");
+
                     //Console.WriteLine("Ingrese un Tipo Valido");
                     return false;
+                  
                 }
                 return true;
             }
             catch (NullReferenceException ex)
             {
-                Console.WriteLine("Error: Valores faltantes en el Post");
+
+                Console.WriteLine("Error: Incorrect Values on Post");
                 return false;
             }
         }
@@ -159,11 +199,13 @@ namespace CampaignModule.BusinessLogic
             {
                 if (tipoMinuscula == tipe)
                 {
+                    Log.Logger.Information("Incorrect value of Type , Operation Aborted");
                     return false;
                 }
             }
+
             return true;
-            throw new BusinessLogic_Exceptions("Error: Valor de Tipo erróneo, sólo se aceptan navidad, black friday o verano.");
+        
         }
 
         public void Activate(string id) //Deactivates any active campaign present, it considers only one active at the time
@@ -175,6 +217,7 @@ namespace CampaignModule.BusinessLogic
                 {
                     if (!_campaignDB.OneCampaignActive())//if no campaign is active
                     {
+                        Log.Logger.Information("Client Activated Campaign: " + id);
                         c2.Active = true; //input campaign is activate
                         _campaignDB.Update(c2);
 
@@ -193,6 +236,7 @@ namespace CampaignModule.BusinessLogic
                     if (c2.Active)
                     {
                         c2.Active = false;
+                        Log.Logger.Information("Client Deactivated Campaign: " + id);
                         _campaignDB.Update(c2);
                         break;
                     }

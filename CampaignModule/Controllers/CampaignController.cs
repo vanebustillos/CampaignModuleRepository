@@ -26,8 +26,17 @@ namespace CampaignModule.Controllers
         [Route("campaigns")]
         public IEnumerable<CampaignDTO> GetAll()
         {
-            Log.Logger.Information("Client asked for Campaings list");
+            Log.Logger.Information("Client trying to Get Campaign list");
             return _campaignLogic.Get(); // Read, Returns all elements in database
+        }
+
+        // GET: api/Campaign/active
+        [HttpGet]
+        [Route("campaigns/active")]
+        public CampaignDTO GetActive()
+        {
+            Log.Logger.Information("Client trying to Get Active Campaign");
+            return _campaignLogic.GetActive(); // Read, Returns all elements in database
         }
 
         // POST: api/Campaign
@@ -35,7 +44,7 @@ namespace CampaignModule.Controllers
         [Route("campaigns")]
         public CampaignDTO Post([FromBody] CampaignDTO campaign)
         {
-            Log.Logger.Information("Client added a new Campaing:" + campaign.Name + " to Campaing list");
+            Log.Logger.Information("Client trying to Create a new Campaign");
             _campaignLogic.Post(campaign); //Create, Makes a new Campaign
             var dbServer = _configuration.GetSection("Database").GetSection("ServerName");
             campaign.Name = $"{campaign.Name} data from {dbServer.Value}";
@@ -47,7 +56,7 @@ namespace CampaignModule.Controllers
         [Route("campaigns/{id}")]
         public void Put([FromBody]CampaignDTO campaign, string id)
         {
-            Log.Logger.Information("Client modified Campaing:" + campaign.Name);
+            Log.Logger.Information("Client trying to Update Campaign: " +id);
             _campaignLogic.Put(campaign, id); //Update, Changes all fields in a Campaign in DB, except for the id
         }
         
@@ -55,7 +64,7 @@ namespace CampaignModule.Controllers
         [Route("campaigns/{id}/activate")]
         public void Activate(string id)
         {
-            Log.Logger.Information("Client activated Campaing with id:" + id );
+            Log.Logger.Information("Client trying to Activate Campaign: " + id);
             _campaignLogic.Activate(id); //Activate a campaign
         }
         
@@ -63,7 +72,7 @@ namespace CampaignModule.Controllers
         [Route("campaigns/{id}/deactivate")]
         public void Deactivate(string id)
         {
-            Log.Logger.Information("Client deactivated Campaing with id:" + id);
+            Log.Logger.Information("Client trying to Deactivate Campaign: " + id);
             _campaignLogic.Deactivate(id); //Deactivate a campaign
         }
         
@@ -72,7 +81,7 @@ namespace CampaignModule.Controllers
         [Route("campaigns/{id}")]
         public void Delete(string id)
         {
-            Log.Logger.Information("Client removed Campaing with id:" + id + " from Campaing list");
+            Log.Logger.Information("Client trying to Delete Campaign: " + id);
             _campaignLogic.Delete(id); //Delete, Removes a campaign from DB
         }
     }
