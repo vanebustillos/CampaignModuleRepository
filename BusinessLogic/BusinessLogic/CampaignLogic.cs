@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using BusinessLogic.Exceptions;
 using CampaignModule.Controllers.DTOModels;
 using CampaignModule.Database;
@@ -36,25 +35,26 @@ namespace CampaignModule.BusinessLogic
             return Datos;
 
         }
-        public CampaignDTO GetActive() 
+        public CampaignDTO GetActive()
         {
             UpdateLocalDB();
             CampaignDTO active = new CampaignDTO();
-            var exists =false;
+            var exists = false;
             foreach (Campaign camp in allCampaign)
             {
-                if(camp.Active)
+                if (camp.Active)
                 {
                     active = ConvDBtoDTO(camp);
                     exists = true;
                 }
-                
+
             }
-            if(!exists)
+            if (!exists)
             {
+                Log.Logger.Information("Error: No active Campaign found");
                 throw new BusinessLogic_Exceptions("Error: No active Campaign found");
             }
-            
+
             Log.Logger.Information("Client Asked for Active Campaign");
             return active;
 
@@ -83,8 +83,9 @@ namespace CampaignModule.BusinessLogic
                 {
                     if (_campaignDB.OneCampaignActive()) //if a campaign is already active
                     {
-                        input.Active = false;//input campaign can´t be activate
+                        input.Active = false; //input campaign can´t be activate
                         Log.Logger.Information("New Campaign cannot be set as active, there is one already activated");
+                        throw new BusinessLogic_Exceptions("Error: There's already an active campaign");
                     }
                 }
                 Log.Logger.Information("Client Created a new Campaign: " + input.Id);
@@ -119,33 +120,37 @@ namespace CampaignModule.BusinessLogic
                         c.Description = input.Description;
                     if (input.Active) //removes active campaign if any
                     {
-
-                        Activate(id);//activate campaign
+                        ActivateUpdate(id);//activate campaign
                     }
                     else
                     {
-                        Deactivate(id); //deactivate campaign
+                        DeactivateUpdate(id); //deactivate campaign
                     }
                     Log.Logger.Information("Client Updated Campaign: " + id);
                     _campaignDB.Update(input); //Updates Campaign in DataBase 
                     break;
-
                 } //if none found does nothing
-
             }
         }
+
         public void Delete(string id) // Delete
         {
+            bool wasDeleted = false;
             UpdateLocalDB();
             foreach (Campaign c in allCampaign)
             {
                 if (c.Id == id.Trim().ToUpper())
                 {
+                    wasDeleted = true;
                     Log.Logger.Information("Client Deleted Campaign: " + id);
                     _campaignDB.Delete(c); //Delete Campaign in DataBase 
                     break;
                 }
-
+            }
+            if (wasDeleted == false)
+            {
+                Log.Logger.Information("Client is trying to delete campaign: " + id + ", but that campaign doesn't exist");
+                throw new BusinessLogic_Exceptions("Error: That campaign doesn't exist");
             }
         }
 
@@ -162,25 +167,20 @@ namespace CampaignModule.BusinessLogic
                 if (String.IsNullOrEmpty(campaign.Name.Trim())) //Verify if name is null or empty
                 {
                     Log.Logger.Information("Missing Name Value, Operation Aborted");
-
-                    Console.WriteLine("Ingrese un nombre");
                     return false;
-                 
+                    //throw new BusinessLogic_Exceptions("Error: Missing Name Value");
                 }
                 if (String.IsNullOrEmpty(campaign.Description.Trim())) //Verify if description is null or empty
                 {
                     Log.Logger.Information("Missing Description Value, Operation Aborted");
-
                     return false;
-                   
+                    //throw new BusinessLogic_Exceptions("Error: Missing Description Value");
                 }
                 if (String.IsNullOrEmpty(campaign.Type.Trim()) || VerifyType(campaign.Type)) //Verify if type is null or invalid
                 {
                     Log.Logger.Information("Incorrect Type Value, Operation Aborted");
-
-                    //Console.WriteLine("Ingrese un Tipo Valido");
                     return false;
-                  
+                    //throw new BusinessLogic_Exceptions("Error: Incorrect Type Value");
                 }
                 return true;
             }
@@ -195,21 +195,21 @@ namespace CampaignModule.BusinessLogic
         public bool VerifyType(string tipo) //verifies the type, returns false if it isnt incorrect, else it returns true or error
         {
             string tipoMinuscula = tipo.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Trim();
-            foreach (string tipe in ValidTypes)
+            foreach (string type in ValidTypes)
             {
-                if (tipoMinuscula == tipe)
+                if (tipoMinuscula == type)
                 {
-                    Log.Logger.Information("Incorrect value of Type , Operation Aborted");
                     return false;
                 }
             }
 
             return true;
-        
+
         }
 
         public void Activate(string id) //Deactivates any active campaign present, it considers only one active at the time
         {
+            bool flagActivated = false;
             UpdateLocalDB();
             foreach (Campaign c2 in allCampaign)
             {
@@ -217,17 +217,25 @@ namespace CampaignModule.BusinessLogic
                 {
                     if (!_campaignDB.OneCampaignActive())//if no campaign is active
                     {
+                        flagActivated = true;
+                        //Activate campaign logic
                         Log.Logger.Information("Client Activated Campaign: " + id);
                         c2.Active = true; //input campaign is activate
                         _campaignDB.Update(c2);
-
                     }
                     break;
                 }
             }
+            if (flagActivated == false)
+            {
+                Log.Logger.Information("Client is trying to activate campaign: " + id + ", but there's already an active campaign");
+                throw new BusinessLogic_Exceptions("Error: There's already an active campaign");
+            }
         }
+
         public void Deactivate(string id)
         {
+            bool flagDeactivated = false;
             UpdateLocalDB();
             foreach (Campaign c2 in allCampaign)
             {
@@ -235,11 +243,60 @@ namespace CampaignModule.BusinessLogic
                 {
                     if (c2.Active)
                     {
+                        flagDeactivated = true;
+                        //Deactivate campaign logic
                         c2.Active = false;
                         Log.Logger.Information("Client Deactivated Campaign: " + id);
                         _campaignDB.Update(c2);
                         break;
                     }
+                }
+            }
+            if (flagDeactivated == false)
+            {
+                Log.Logger.Information("Client is trying to deactivate campaign: " + id + ", but that campaign isn't active");
+                throw new BusinessLogic_Exceptions("Error: That campaign isn't active");
+            }
+        }
+
+        public void ActivateUpdate(string id) //Deactivates any active campaign present, it considers only one active at the time
+        {
+            bool flagActivated = false;
+            UpdateLocalDB();
+            foreach (Campaign c2 in allCampaign)
+            {
+                if (c2.Id == id.Trim())
+                {
+                    if (c2.Active || !_campaignDB.OneCampaignActive())//if the same campaign is active or there isn't an active campaign
+                    {
+                        flagActivated = true;
+                        //Activate campaign logic
+                        Log.Logger.Information("Client Activated Campaign: " + id);
+                        c2.Active = true; //input campaign is activate
+                        _campaignDB.Update(c2);
+                    }
+                    break;
+                }
+            }
+            if (flagActivated == false)
+            {
+                Log.Logger.Information("Client is trying to activate campaign: " + id + ", but there's already an active campaign");
+                throw new BusinessLogic_Exceptions("Error: There's already an active campaign");
+            }
+        }
+
+        public void DeactivateUpdate(string id)
+        {
+            UpdateLocalDB();
+            foreach (Campaign c2 in allCampaign)
+            {
+                if (c2.Id == id)
+                {
+                    //Deactivate campaign logic
+                    c2.Active = false;
+                    Log.Logger.Information("Client Deactivated Campaign: " + id);
+                    _campaignDB.Update(c2);
+                    break;
                 }
             }
         }
@@ -257,9 +314,10 @@ namespace CampaignModule.BusinessLogic
                 case "black friday":
                     input.Type = "BFRIDAY";
                     break;
-
                 default:
-                    break;
+                    Log.Logger.Information("Incorrect Type Value, Operation Aborted");
+                    throw new BusinessLogic_Exceptions("Error: Incorrect Type Value");
+                    //break;
             }
         }
 
